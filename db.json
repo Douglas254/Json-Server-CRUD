@@ -1,17 +1,17 @@
 {
   "users": [
     {
-      "name": "Douglas",
-      "address": "Kenya",
+      "name": "Douglas Obara",
       "email": "douglasobara97@gmail.com",
-      "contact": "(+254)742608717",
+      "contact": "0742608717",
+      "address": "Nairobi - Kenya",
       "id": 1
     },
     {
-      "name": "Douglas Obara Omwando",
-      "email": "douglasobara97@gmail.com",
-      "contact": "2122",
-      "address": "kibich",
+      "name": "John Doe",
+      "email": "johndoe@gmail.com",
+      "contact": "8624163971",
+      "address": "UK",
       "id": 2
     }
   ]

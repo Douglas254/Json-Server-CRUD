@@ -27,6 +27,8 @@ const initialState = {
 function App() {
   const [state, setState] = useState(initialState);
   const [data, setData] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [editMode, setEditMode] = useState(false);
 
   // destructuring
   const { name, email, contact, address } = state;
@@ -53,11 +55,21 @@ function App() {
     if (!name || !email || !contact || !address) {
       toast.error("Please fill all the input fields");
     } else {
-      axios.post(api, state);
-      toast.success("Added Successfully");
-      setState({ name: "", email: "", contact: "", address: "" });
-      // call to update automatic after POST without refreshing browsers
-      setTimeout(() => loadUsers(), 500);
+      if (!editMode) {
+        axios.post(api, state);
+        toast.success("Added Successfully");
+        setState({ name: "", email: "", contact: "", address: "" });
+        // call to update automatic after POST without refreshing browsers
+        setTimeout(() => loadUsers(), 500);
+      } else {
+        axios.put(`${api}/${userId}`, state);
+        toast.success("Updated Successfully");
+        setState({ name: "", email: "", contact: "", address: "" });
+        // call to update automatic after POST without refreshing browsers
+        setTimeout(() => loadUsers(), 500);
+        setUserId(null);
+        setEditMode(false);
+      }
     }
   };
 
@@ -69,6 +81,15 @@ function App() {
       setTimeout(() => loadUsers(), 500);
     }
   };
+
+  // function to perform the update operation
+  const handleUpdate = (id) => {
+    const singleUser = data.find((item) => item.id === id);
+    setState({ ...singleUser });
+    setUserId(id);
+    setEditMode(true);
+  };
+
   return (
     <>
       <ToastContainer />
@@ -123,7 +144,7 @@ function App() {
               </Form.Group>
               <div className="d-grid gap-2 mt-2">
                 <Button type="submit" variant="primary" size="lg">
-                  Submit
+                  {editMode ? "Update" : "Submit"}
                 </Button>
               </div>
             </Form>
@@ -156,6 +177,7 @@ function App() {
                           <Button
                             style={{ marginRight: "5px" }}
                             variant="secondary"
+                            onClick={() => handleUpdate(item.id)}
                           >
                             Update
                           </Button>
