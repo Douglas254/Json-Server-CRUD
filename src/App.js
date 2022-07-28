@@ -17,8 +17,19 @@ import "./App.css";
 // our API
 const api = "http://localhost:5000/users";
 
+const initialState = {
+  name: "",
+  email: "",
+  contact: "",
+  address: "",
+};
+
 function App() {
+  const [state, setState] = useState(initialState);
   const [data, setData] = useState([]);
+
+  // destructuring
+  const { name, email, contact, address } = state;
 
   useEffect(() => {
     loadUsers();
@@ -28,6 +39,35 @@ function App() {
     const response = await axios.get(api);
     setData(response.data);
     // console.log(response.data);
+  };
+
+  // function to handle the change event
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+    setState({ ...state, [name]: value });
+  };
+
+  // functon to handle our submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name || !email || !contact || !address) {
+      toast.error("Please fill all the input fields");
+    } else {
+      axios.post(api, state);
+      toast.success("Added Successfully");
+      setState({ name: "", email: "", contact: "", address: "" });
+      // call to update automatic after POST without refreshing browsers
+      setTimeout(() => loadUsers(), 500);
+    }
+  };
+
+  // function to perform the delete operation
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure wanted to delete that user ?")) {
+      axios.delete(`${api}/${id}`);
+      toast.success("Deleted Successfully");
+      setTimeout(() => loadUsers(), 500);
+    }
   };
   return (
     <>
@@ -40,7 +80,53 @@ function App() {
       <Container style={{ marginTop: "70px" }}>
         <Row>
           <Col md={4}>
-            <h2>Form</h2>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <Form.Label style={{ textAlign: "left" }}>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Name"
+                  name="name"
+                  value={name}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label style={{ textAlign: "left" }}>Email</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Email"
+                  name="email"
+                  value={email}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label style={{ textAlign: "left" }}>Contact</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Contact"
+                  name="contact"
+                  value={contact}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label style={{ textAlign: "left" }}>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Address"
+                  name="address"
+                  value={address}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <div className="d-grid gap-2 mt-2">
+                <Button type="submit" variant="primary" size="lg">
+                  Submit
+                </Button>
+              </div>
+            </Form>
           </Col>
           <Col md={8}>
             <Table bordered hover>
@@ -76,6 +162,7 @@ function App() {
                           <Button
                             style={{ marginRight: "5px" }}
                             variant="danger"
+                            onClick={() => handleDelete(item.id)}
                           >
                             Delete
                           </Button>
