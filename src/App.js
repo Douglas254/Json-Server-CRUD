@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 // our API
-const api = "http://localhost:5000/users";
+// const api = "http://localhost:5000/users";
 
 const initialState = {
   name: "",
@@ -38,7 +38,11 @@ function App() {
   }, []);
 
   const loadUsers = async () => {
-    const response = await axios.get(api);
+    const devEnv = process.env.NODE_ENV !== "production";
+    const { REACT_APP_DEV_URL, REACT_APP_PROD_URL } = process.env;
+    const response = await axios.get(
+      `${devEnv ? REACT_APP_DEV_URL : REACT_APP_PROD_URL}`
+    );
     setData(response.data);
     // console.log(response.data);
   };
@@ -56,13 +60,23 @@ function App() {
       toast.error("Please fill all the input fields");
     } else {
       if (!editMode) {
-        axios.post(api, state);
+        const devEnv = process.env.NODE_ENV !== "production";
+        const { REACT_APP_DEV_URL, REACT_APP_PROD_URL } = process.env;
+        axios.post(
+          `${`${devEnv ? REACT_APP_DEV_URL : REACT_APP_PROD_URL}`}`,
+          state
+        );
         toast.success("Added Successfully");
         setState({ name: "", email: "", contact: "", address: "" });
         // call to update automatic after POST without refreshing browsers
         setTimeout(() => loadUsers(), 500);
       } else {
-        axios.put(`${api}/${userId}`, state);
+        const devEnv = process.env.NODE_ENV !== "production";
+        const { REACT_APP_DEV_URL, REACT_APP_PROD_URL } = process.env;
+        axios.put(
+          `${devEnv ? REACT_APP_DEV_URL : REACT_APP_PROD_URL}/${userId}`,
+          state
+        );
         toast.success("Updated Successfully");
         setState({ name: "", email: "", contact: "", address: "" });
         // call to update automatic after POST without refreshing browsers
@@ -76,7 +90,12 @@ function App() {
   // function to perform the delete operation
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure wanted to delete that user ?")) {
-      axios.delete(`${api}/${id}`);
+      const devEnv = process.env.NODE_ENV !== "production";
+      const { REACT_APP_DEV_URL, REACT_APP_PROD_URL } = process.env;
+      axios.delete(
+        `${`${devEnv ? REACT_APP_DEV_URL : REACT_APP_PROD_URL}`}/${id}`
+      );
+
       toast.success("Deleted Successfully");
       setTimeout(() => loadUsers(), 500);
     }

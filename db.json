@@ -4,7 +4,7 @@
       "name": "Douglas Obara",
       "email": "douglasobara97@gmail.com",
       "contact": "0742608717",
-      "address": "Nairobi - Kenya",
+      "address": "Nairobi",
       "id": 1
     },
     {
@@ -13,6 +13,20 @@
       "contact": "8624163971",
       "address": "UK",
       "id": 2
+    },
+    {
+      "name": "Phanice Omwega",
+      "email": "phanice@gmail,com",
+      "contact": "0745274654",
+      "address": "Nairobi - Kenya",
+      "id": 3
+    },
+    {
+      "name": "Sushma Aryal",
+      "email": "sushma@gmail.com",
+      "contact": "9123456783",
+      "address": "USA",
+      "id": 4
     }
   ]
 }
